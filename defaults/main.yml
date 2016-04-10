@@ -1,0 +1,6 @@
+---
+
+swap_file: /var/tmp/extraswap
+## size in MB
+swap_size: 1024
+
