@@ -54,6 +54,12 @@ $ vagrant ssh
 
 ## Troubleshooting & Known issues
 
+* swapon is failing on lxc inside digitalocean vps but only on ubuntu trusty
+```
+swapon: /var/tmp/extraswap: swapon failed: Operation not permitted
+```
+works fine with xenial or centos7
+
 
 ## License
 

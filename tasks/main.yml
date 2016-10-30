@@ -33,6 +33,7 @@
 - name: Add to fstab
   action: lineinfile dest=/etc/fstab regexp="{{ swap_file }}" line="{{ swap_file }} none swap sw 0 0" state=present
 
+- debug: var=ansible_virtualization_type
 - block:
     - name: Turn swap on
       command: swapon -a
@@ -62,5 +63,6 @@
         name: vm.vfs_cache_pressure
         value: "50"
 
-  when: (ansible_virtualization_type is not defined or (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker" and ansible_virtualization_type != "kvm"))
+  when: (ansible_virtualization_type is not defined or (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker"))
+#  when: (ansible_virtualization_type is not defined or (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker" and ansible_virtualization_type != "kvm"))
 
