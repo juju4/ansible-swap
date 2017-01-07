@@ -5,5 +5,5 @@
 #  vars:
 #    - a:
   roles:
-    - swap
+    - juju4.swap
 

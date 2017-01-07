@@ -64,5 +64,4 @@
         value: "50"
 
   when: (ansible_virtualization_type is not defined or (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker"))
-#  when: (ansible_virtualization_type is not defined or (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker" and ansible_virtualization_type != "kvm"))
 
