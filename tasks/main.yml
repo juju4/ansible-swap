@@ -43,13 +43,13 @@
       changed_when: false
       register: proc1
     - name: Set swapiness (proc)
-      shell: echo 1 | tee /proc/sys/vm/swappiness
-      when: proc1 is defined and proc1.stdout != "1"
+      shell: "echo {{ swap_swapiness }} | tee /proc/sys/vm/swappiness"
+      when: proc1 is defined and proc1.stdout != swap_swapiness
 
     - name: set swapiness (sysctl)
       sysctl:
         name: vm.swappiness
-        value: "1"
+        value: "{{ swap_swapiness }}"
 
     - command: cat /proc/sys/vm/vfs_cache_pressure
       changed_when: false

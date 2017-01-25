@@ -4,3 +4,7 @@ swap_file: /var/tmp/extraswap
 ## size in MB
 swap_size: 1024
 
+## if you have a lot of ram, use 1 (use swap only in last resort)
+## if not, 60 is ubuntu default
+swap_swapiness: 1
+#swap_swapiness: 60
