@@ -42,14 +42,14 @@
     - command: cat /proc/sys/vm/swappiness
       changed_when: false
       register: proc1
-    - name: Set swapiness (proc)
-      shell: "echo {{ swap_swapiness }} | tee /proc/sys/vm/swappiness"
-      when: proc1 is defined and proc1.stdout != swap_swapiness
+    - name: Set swappiness (proc)
+      shell: "echo {{ swap_swappiness }} | tee /proc/sys/vm/swappiness"
+      when: proc1 is defined and proc1.stdout != swap_swappiness
 
-    - name: set swapiness (sysctl)
+    - name: set swappiness (sysctl)
       sysctl:
         name: vm.swappiness
-        value: "{{ swap_swapiness }}"
+        value: "{{ swap_swappiness }}"
 
     - command: cat /proc/sys/vm/vfs_cache_pressure
       changed_when: false

@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/juju4/ansible-swap.svg?branch=master)](https://travis-ci.org/juju4/ansible-swap)
+[![Build Status - Master](https://travis-ci.org/juju4/ansible-swap.svg?branch=master)](https://travis-ci.org/juju4/ansible-swap)
+[![Build Status - Devel](https://travis-ci.org/juju4/ansible-swap.svg?branch=devel)](https://travis-ci.org/juju4/ansible-swap/branches)
 # Add swap to a system ansible role
 
 A simple ansible role to setup swap from file
@@ -10,6 +11,7 @@ For example, for VPS.
 It was tested on the following versions:
  * 1.9
  * 2.0
+ * 2.2
 
 ### Operating systems
 
@@ -23,7 +25,7 @@ For example
 ```
 - host: all
   roles:
-    - swap
+    - juju4.swap
 ```
 
 ## Variables
@@ -41,13 +43,13 @@ This role has a travis basic test (for github), more advanced with kitchen and a
 
 Once you ensured all necessary roles are present, You can test with:
 ```
-$ cd /path/to/roles/swap
+$ cd /path/to/roles/juju4.swap
 $ kitchen verify
 $ kitchen login
 ```
 or
 ```
-$ cd /path/to/roles/swap/test/vagrant
+$ cd /path/to/roles/juju4.swap/test/vagrant
 $ vagrant up
 $ vagrant ssh
 ```
