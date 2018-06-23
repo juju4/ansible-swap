@@ -10,13 +10,10 @@ before_install:
  - mkdir /tmp/kitchen
 ## serverspec test
  - sudo apt-get install -qq ruby2.0 rake
- - sudo gem2.0 install serverspec
- - ln -s /home/travis/build/juju4/ansible-swap/test/integration/default/tmp /tmp/kitchen/tmp
 install:
   - pip install ansible
   - ansible --version
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-  - gem2.0 --version
 script:
   - "echo \"[test-kitchen]\nlocalhost\" > inventory"
 
@@ -32,4 +29,4 @@ script:
 
 # Serverspec
 #  - "test/integration/default/serverspec/run-local-tests.sh"
-  - "cd test/integration/default/serverspec/ && bundle exec rake spec"
+#  - "cd test/integration/default/serverspec/ && bundle exec rake spec"
