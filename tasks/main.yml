@@ -11,7 +11,7 @@
 
 - name: Create swap space - debian
 #  command: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
-  command: "fallocate -l {{ swap_size}}M {{ swap_file }}"
+  command: "fallocate -l {{ swap_size }}M {{ swap_file }}"
   when: not swap_file_check.stat.exists and (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
 #  when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
 #  when: ansible_swaptotal_mb < 1
@@ -20,7 +20,7 @@
 ## https://www.linux.com/forums/lfs201-class-forum/lab-131-swapon-failed-invalid-argument
 - name: Create swap space - redhat
   command: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
-  when: not swap_file_check.stat.exists and (ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux')
+  when: not swap_file_check.stat.exists and ansible_os_family == "RedHat"
 
 - name: Make swap
   command: mkswap {{ swap_file }}
@@ -39,7 +39,8 @@
       command: swapon -a
       when: not swap_file_check.stat.exists
 
-    - command: cat /proc/sys/vm/swappiness
+    - name: Check current swappiness value
+      command: cat /proc/sys/vm/swappiness
       changed_when: false
       register: proc1
     - name: Set swappiness (proc)
@@ -51,7 +52,8 @@
         name: vm.swappiness
         value: "{{ swap_swappiness }}"
 
-    - command: cat /proc/sys/vm/vfs_cache_pressure
+    - name: Check current vfs_cache_pressure value
+      command: cat /proc/sys/vm/vfs_cache_pressure
       changed_when: false
       register: proc2
     - name: Set vfs_cache_pressure (proc)
@@ -63,5 +65,7 @@
         name: vm.vfs_cache_pressure
         value: "50"
 
-  when: (ansible_virtualization_type is not defined or (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker"))
-
+  when: >
+    (ansible_virtualization_type is not defined or
+      (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker")
+    )
