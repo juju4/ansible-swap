@@ -44,8 +44,8 @@
       changed_when: false
       register: proc1
     - name: Set swappiness (proc)
-      shell: "echo {{ swap_swappiness }} | tee /proc/sys/vm/swappiness"
-      when: proc1 is defined and proc1.stdout != swap_swappiness
+      shell: "echo {{ swap_swappiness|string }} | tee /proc/sys/vm/swappiness"
+      when: proc1 is defined and proc1.stdout != swap_swappiness|string
 
     - name: set swappiness (sysctl)
       sysctl:
