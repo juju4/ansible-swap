@@ -50,7 +50,7 @@
     - name: set swappiness (sysctl)
       sysctl:
         name: vm.swappiness
-        value: "{{ swap_swappiness }}"
+        value: "{{ swap_swappiness|string }}"
 
     - name: Check current vfs_cache_pressure value
       command: cat /proc/sys/vm/vfs_cache_pressure
