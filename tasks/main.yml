@@ -10,11 +10,11 @@
   register: swap_file_check
 
 - name: Create swap space - debian
-#  command: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
-  command: "fallocate -l {{ swap_size }}M {{ swap_file }}"
+  # command: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
+  command: "fallocate -l {{ swap_size }}M {{ swap_file }}"
   when: not swap_file_check.stat.exists and (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
-#  when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
-#  when: ansible_swaptotal_mb < 1
+  # when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
+  # when: ansible_swaptotal_mb < 1
 
 ## https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-centos-7?comment=31159
 ## https://www.linux.com/forums/lfs201-class-forum/lab-131-swapon-failed-invalid-argument
@@ -25,13 +25,13 @@
 - name: Make swap
   command: mkswap {{ swap_file }}
   when: not swap_file_check.stat.exists
-#  when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
+  # when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
 
 - name: Change swap file permissions
   file: path="{{ swap_file }}" owner=root group=root mode=0600
 
 - name: Add to fstab
-  action: lineinfile dest=/etc/fstab regexp="{{ swap_file }}" line="{{ swap_file }} none swap sw 0 0" state=present
+  action: lineinfile dest=/etc/fstab regexp="{{ swap_file }}" line="{{ swap_file }} none swap sw 0 0" mode=0644 state=present
 
 - debug: var=ansible_virtualization_type
 - block:

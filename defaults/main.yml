@@ -7,4 +7,4 @@ swap_size: 1024
 ## if you have a lot of ram, use 1 (use swap only in last resort)
 ## if not, 60 is ubuntu default
 swap_swappiness: '1'
-#swap_swappiness: '60'
+# swap_swappiness: '60'
