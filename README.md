@@ -1,5 +1,9 @@
 [![Build Status - Master](https://travis-ci.org/juju4/ansible-swap.svg?branch=master)](https://travis-ci.org/juju4/ansible-swap)
 [![Build Status - Devel](https://travis-ci.org/juju4/ansible-swap.svg?branch=devel)](https://travis-ci.org/juju4/ansible-swap/branches)
+
+[![Actions Status - Master](https://github.com/juju4/ansible-swap/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-swap/actions?query=branch%3Amaster)
+[![Actions Status - Devel](https://github.com/juju4/ansible-swap/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-swap/actions?query=branch%3Adevel)
+
 # Add swap to a system ansible role
 
 A simple ansible role to setup swap from file
@@ -13,10 +17,11 @@ It was tested on the following versions:
  * 2.0
  * 2.2
  * 2.5
+ * 2.10
 
 ### Operating systems
 
-Tested Ubuntu 14.04, 16.04, 18.04 and centos7
+Tested Ubuntu 16.04, 18.04, 20.04 and centos7
 
 ## Example Playbook
 
@@ -67,4 +72,3 @@ works fine with xenial or centos7
 ## License
 
 BSD 2-clause
-
