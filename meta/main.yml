@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: swap
   author: juju4
   description: setup swap from file
   license: BSD
