@@ -33,7 +33,8 @@
 - name: Add to fstab
   action: lineinfile dest=/etc/fstab regexp="{{ swap_file }}" line="{{ swap_file }} none swap sw 0 0" mode=0644 state=present
 
-- debug: var=ansible_virtualization_type
+- name: Debug | ansible_virtualization_type
+  debug: var=ansible_virtualization_type
 - block:
     - name: Turn swap on
       command: swapon -a
