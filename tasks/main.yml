@@ -46,13 +46,13 @@
       changed_when: false
       register: proc1
     - name: Set swappiness (proc)
-      ansible.builtin.shell: "echo {{ swap_swappiness|string }} | tee /proc/sys/vm/swappiness"
+      ansible.builtin.shell: "echo {{ swap_swappiness | string }} | tee /proc/sys/vm/swappiness"
       when: proc1 is defined and proc1.stdout != swap_swappiness|string
 
     - name: set swappiness (sysctl)
       sysctl:
         name: vm.swappiness
-        value: "{{ swap_swappiness|string }}"
+        value: "{{ swap_swappiness | string }}"
 
     - name: Check current vfs_cache_pressure value
       ansible.builtin.command: cat /proc/sys/vm/vfs_cache_pressure
