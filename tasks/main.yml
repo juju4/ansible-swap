@@ -18,7 +18,7 @@
 
 ## https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-centos-7?comment=31159
 ## https://www.linux.com/forums/lfs201-class-forum/lab-131-swapon-failed-invalid-argument
-- name: Create swap space - redhat
+- name: Create swap space - redhat  # noqa no-free-form
   ansible.builtin.command: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
   when: not swap_file_check.stat.exists and ansible_os_family == "RedHat"
 
@@ -28,14 +28,28 @@
   # when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
 
 - name: Change swap file permissions
-  ansible.builtin.file: path="{{ swap_file }}" owner=root group=root mode=0600
+  ansible.builtin.file:
+    path: "{{ swap_file }}"
+    owner: root
+    group: root
+    mode: 0600
 
 - name: Add to fstab
-  ansible.builtin.lineinfile: dest=/etc/fstab regexp="{{ swap_file }}" line="{{ swap_file }} none swap sw 0 0" mode=0644 state=present
+  ansible.builtin.lineinfile:
+    dest: /etc/fstab
+    regexp: "{{ swap_file }}"
+    line: "{{ swap_file }} none swap sw 0 0"
+    mode: 0644
+    state: present
 
 - name: Debug | ansible_virtualization_type
-  ansible.builtin.debug: var=ansible_virtualization_type
+  ansible.builtin.debug:
+    var: ansible_virtualization_type
 - name: Not container
+  when: >
+    (ansible_virtualization_type is not defined or
+      (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker")
+    )
   block:
     - name: Turn swap on
       ansible.builtin.command: swapon -a
@@ -50,7 +64,7 @@
       when: proc1 is defined and proc1.stdout != swap_swappiness | string
 
     - name: Set swappiness (sysctl)
-      sysctl:
+      ansible.posix.sysctl:
         name: vm.swappiness
         value: "{{ swap_swappiness | string }}"
 
@@ -63,11 +77,6 @@
       when: proc2 is defined and proc2.stdout != "50"
 
     - name: Set vm.vfs_cache_pressure (sysctl)
-      sysctl:
+      ansible.posix.sysctl:
         name: vm.vfs_cache_pressure
         value: "50"
-
-  when: >
-    (ansible_virtualization_type is not defined or
-      (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker")
-    )
