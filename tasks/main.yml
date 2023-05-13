@@ -11,7 +11,8 @@
 
 - name: Create swap space - debian
   # ansible.builtin.command: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
-  ansible.builtin.command: "fallocate -l {{ swap_size }}M {{ swap_file }}"
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "fallocate -l {{ swap_size }}M {{ swap_file }}"
   when: not swap_file_check.stat.exists and (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
   # when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
   # when: ansible_swaptotal_mb < 1
@@ -19,11 +20,13 @@
 ## https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-centos-7?comment=31159
 ## https://www.linux.com/forums/lfs201-class-forum/lab-131-swapon-failed-invalid-argument
 - name: Create swap space - redhat  # noqa no-free-form
-  ansible.builtin.command: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
   when: not swap_file_check.stat.exists and ansible_os_family == "RedHat"
 
 - name: Make swap
-  ansible.builtin.command: mkswap {{ swap_file }}
+  ansible.builtin.command:  # noqa no-changed-when
+    cmd: "mkswap {{ swap_file }}"
   when: not swap_file_check.stat.exists
   # when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
 
@@ -52,15 +55,22 @@
     )
   block:
     - name: Turn swap on
-      ansible.builtin.command: swapon -a
+      ansible.builtin.command:  # noqa no-changed-when
+        cmd: swapon -a
       when: not swap_file_check.stat.exists
 
     - name: Check current swappiness value
-      ansible.builtin.command: cat /proc/sys/vm/swappiness
+      ansible.builtin.command:
+        cmd: cat /proc/sys/vm/swappiness
       changed_when: false
       register: proc1
     - name: Set swappiness (proc)
-      ansible.builtin.shell: "echo {{ swap_swappiness | string }} | tee /proc/sys/vm/swappiness"
+      ansible.builtin.shell:  # noqa no-changed-when
+        cmd: |
+          set -o pipefail
+          echo {{ swap_swappiness | string }} | tee /proc/sys/vm/swappiness
+      args:
+        executable: /bin/bash
       when: proc1 is defined and proc1.stdout != swap_swappiness | string
 
     - name: Set swappiness (sysctl)
@@ -69,11 +79,17 @@
         value: "{{ swap_swappiness | string }}"
 
     - name: Check current vfs_cache_pressure value
-      ansible.builtin.command: cat /proc/sys/vm/vfs_cache_pressure
+      ansible.builtin.command:
+        cmd: cat /proc/sys/vm/vfs_cache_pressure
       changed_when: false
       register: proc2
     - name: Set vfs_cache_pressure (proc)
-      ansible.builtin.shell: echo 50 | tee /proc/sys/vm/vfs_cache_pressure
+      ansible.builtin.shell:  # noqa no-changed-when
+        cmd:
+          set -o pipefail
+          echo 50 | tee /proc/sys/vm/vfs_cache_pressure
+      args:
+        executable: /bin/bash
       when: proc2 is defined and proc2.stdout != "50"
 
     - name: Set vm.vfs_cache_pressure (sysctl)
