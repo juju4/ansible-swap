@@ -13,22 +13,22 @@
   # ansible.builtin.command: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
   ansible.builtin.command:  # noqa no-changed-when
     cmd: "fallocate -l {{ swap_size }}M {{ swap_file }}"
-  when: not swap_file_check.stat.exists and (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
-  # when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
-  # when: ansible_swaptotal_mb < 1
+  when: not swap_file_check.stat.exists and (ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu')
+  # when: ansible_facts['swaptotal_mb'] < 1 and not swap_file_check.stat.exists
+  # when: ansible_facts['swaptotal_mb'] < 1
 
 ## https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-centos-7?comment=31159
 ## https://www.linux.com/forums/lfs201-class-forum/lab-131-swapon-failed-invalid-argument
 - name: Create swap space - redhat  # noqa no-free-form
   ansible.builtin.command:  # noqa no-changed-when
     cmd: "dd if=/dev/zero of={{ swap_file }} bs=1M count={{ swap_size }}"
-  when: not swap_file_check.stat.exists and ansible_os_family == "RedHat"
+  when: not swap_file_check.stat.exists and ansible_facts['os_family'] == "RedHat"
 
 - name: Make swap
   ansible.builtin.command:  # noqa no-changed-when
     cmd: "mkswap {{ swap_file }}"
   when: not swap_file_check.stat.exists
-  # when: ansible_swaptotal_mb < 1 and not swap_file_check.stat.exists
+  # when: ansible_facts['swaptotal_mb'] < 1 and not swap_file_check.stat.exists
 
 - name: Change swap file permissions
   ansible.builtin.file:
@@ -45,13 +45,13 @@
     mode: '0644'
     state: present
 
-- name: Debug | ansible_virtualization_type
+- name: Debug | ansible_facts['virtualization_type']
   ansible.builtin.debug:
-    var: ansible_virtualization_type
+    var: ansible_facts['virtualization_type']
 - name: Not container
   when: >
-    (ansible_virtualization_type is not defined or
-      (ansible_virtualization_type != "lxc" and ansible_virtualization_type != "docker")
+    (ansible_facts['virtualization_type'] is not defined or
+      (ansible_facts['virtualization_type'] != "lxc" and ansible_facts['virtualization_type'] != "docker")
     )
   block:
     - name: Turn swap on
