@@ -1,7 +1,7 @@
+# Add swap to a system ansible role
+
 [![Actions Status - Main](https://github.com/juju4/ansible-swap/workflows/AnsibleCI/badge.svg)](https://github.com/juju4/ansible-swap/actions?query=branch%3Amain)
 [![Actions Status - Devel](https://github.com/juju4/ansible-swap/workflows/AnsibleCI/badge.svg?branch=devel)](https://github.com/juju4/ansible-swap/actions?query=branch%3Adevel)
-
-# Add swap to a system ansible role
 
 A simple ansible role to setup swap from file
 For example, for VPS.
